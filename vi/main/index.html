@@ -19,7 +19,7 @@
             </button>
             <h2 class="text-xl font-bold text-blue-600 mt-2 mb-6">Menu</h2>
 
-            <a href="" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+            <a href="../main" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
                 <svg class="w-5 h-5 mr-3 -scale-x-100" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                 AI
             </a>
@@ -52,7 +52,7 @@
         <section id="category-selection" class="space-y-4">
             <h2 class="text-xl font-bold text-gray-700 mb-4">Bạn đang cần động lực ở lĩnh vực nào?</h2>
 
-            <div class="category-card p-4 rounded-xl bg-red-50 border border-red-200 shadow-md" data-category="1" onclick="selectCategory(1, 'Cai nghiện Vật lý')">
+            <div class="category-card p-4 rounded-xl bg-red-50 border border-red-200 shadow-md" data-category="1" onclick="selectCategory(1, 'Hoàn thiện cơ bản')">
                 <div>
                     <div class="icon-circle bg-red-200 text-red-700">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9.25 10L7 13.5M15 17L15.5 10L17 13.5M12 21a9 9 0 100-18 9 9 0 000 18z"></path></svg>
@@ -81,20 +81,10 @@
                 </div>
                 <p class="text-sm text-yellow-500 mt-2">Cải thiện giao tiếp, kiểm soát cảm xúc, thay đổi suy nghĩ.</p>
             </div>
-
-            <div class="category-card p-4 rounded-xl bg-blue-50 border border-blue-200 shadow-md" data-category="4" onclick="selectCategory(4, 'Hỗ trợ Tinh thần Khẩn cấp')">
-                <div>
-                    <div class="icon-circle bg-blue-200 text-blue-700">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-semibold text-blue-600">4. Lắng Nghe & Thấu Hiểu</h3>
-                </div>
-                <p class="text-sm text-blue-500 mt-2 font-bold">Lắng nghe, cảm thông, động viên.</p>
-            </div>
         </section>
 
         <section id="premium-banner" class="mt-6">
-            <a href="../premium/vn" class="block p-5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
+            <a href="../premium" class="block p-5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
                 <div class="flex justify-between items-center">
                     <div>
                         <h3 class="font-bold text-lg">Nâng cấp MOTIVAI Premium</h3>
@@ -119,11 +109,10 @@
             </div>
 
             <h2 class="text-lg font-semibold text-gray-700">Các Mục Tiêu Gợi Ý:</h2>
-            <div id="suggested-goals" class="grid grid-cols-2 gap-3">
-            </div>
+            <div id="suggested-goals" class="grid grid-cols-2 gap-3"></div>
 
             <div class="pt-4 border-t border-gray-200">
-                <label for="custom-goal" class="block text-sm font-medium text-gray-700 mb-2">Hoặc mục tiêu Khác (Tự viết):</label>
+                <label for="custom-goal" class="block text-sm font-medium text-gray-700 mb-2">Không phù hợp? Hãy tự viết mục tiêu của bạn:</label>
                 <textarea id="custom-goal" rows="2" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 shadow-sm" placeholder="Ví dụ: Tớ muốn học cách nói 'Không' một cách lịch sự."></textarea>
             </div>
 

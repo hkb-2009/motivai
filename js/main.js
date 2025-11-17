@@ -18,8 +18,7 @@ const menuCloseButton = document.getElementById('menu-close-button');
 const CATEGORY_MAP = {
     1: 'habit',
     2: 'habit',
-    3: 'emotion',
-    4: 'emotion'
+    3: 'emotion'
 };
 const BACKEND_URL = "http://localhost:8000";
 
@@ -75,7 +74,7 @@ function showLoading(show) {
     sendButton.disabled = show;
 }
 
-// --- API Call Function (The Fix) ---
+// --- API Call Function ---
 
 async function sendMessage(userMessage) {
     if (!userMessage.trim()) return;
@@ -126,11 +125,10 @@ function returnToHome() {
     premiumBanner.classList.remove('hidden');
 }
 
-const goalData = { /* ... (Your existing goalData object) ... */
-    1: ["Bỏ thuốc lá", "Giảm thời gian dùng mạng xã hội", "Ngừng ăn vặt sau 21h"],
-    2: ["Tập thể dục 30 phút/ngày", "Uống đủ 4 cốc nước", "Tự học chuyên môn 1 giờ/ngày"],
-    3: ["Nói chuyện với người lạ 1 lần/tuần", "Kiểm soát cơn giận 5s trước khi phản ứng", "Viết nhật ký biết ơn"],
-    4: ["Chỉ cần lắng nghe tớ thôi", "Tớ đang rất buồn", "Tớ muốn thoát khỏi cảm giác này"],
+const goalData = {
+    1: ["Giảm nước ngọt có ga", "Giảm thời gian dùng mạng xã hội", "Ngừng ăn vặt sau 21h", "Ăn hoa quả hằng ngày"],
+    2: ["Tập thể dục 30 phút/ngày", "Uống đủ 4 cốc nước", "Tự học chuyên môn 1 giờ/ngày", "Thiền mỗi ngày"],
+    3: ["Nói chuyện với người lạ 1 lần/tuần", "Kiểm soát cơn giận 5s trước khi phản ứng", "Viết nhật ký biết ơn", "Ra ngoài giao lưu thể thao mỗi tuần"]
 };
 
 function selectCategory(categoryId, categoryName) {
@@ -138,7 +136,7 @@ function selectCategory(categoryId, categoryName) {
     currentCategoryName = categoryName;
     currentCategoryKey = CATEGORY_MAP[categoryId]; // Set the key for API call
 
-    // Clear and populate goals (Your existing logic)
+    // Clear and populate goals
     selectedCategoryTitle.textContent = `${categoryId}. ${categoryName}`;
     suggestedGoalsContainer.innerHTML = '';
     const goals = goalData[categoryId] || [];
@@ -146,13 +144,14 @@ function selectCategory(categoryId, categoryName) {
         const button = document.createElement('button');
         button.className = 'goal-button p-3 text-sm rounded-xl font-medium text-indigo-700 bg-indigo-100 hover:bg-indigo-200 transition shadow-sm';
         button.textContent = goal;
-        button.onclick = () => { customGoalTextarea.value = goal; }; // Set goal on click
+
+        button.onclick = () => {
+            customGoalTextarea.value = goal;
+            showChatInterface();
+        };
+
         suggestedGoalsContainer.appendChild(button);
     });
-    const otherButton = document.createElement('button');
-    otherButton.className = 'p-3 text-sm rounded-xl font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 transition shadow-sm';
-    otherButton.textContent = 'Khác (Tự điền)';
-    suggestedGoalsContainer.appendChild(otherButton);
 
     // Transition to Goal Setting Screen
     categorySelection.classList.add('hidden');
@@ -241,7 +240,7 @@ window.onload = () => {
         menuOverlay.addEventListener('click', closeMenu);
     }
 
-    // Make functions globally accessible (since they are referenced in HTML onclick)
+    // Make functions globally accessible
     window.returnToHome = returnToHome;
     window.selectCategory = selectCategory;
     window.showChatInterface = showChatInterface;

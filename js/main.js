@@ -14,7 +14,6 @@ const slideMenu = document.getElementById('slide-menu');
 const menuCloseButton = document.getElementById('menu-close-button');
 
 // --- Configuration ---
-// Map ID to the string key expected by Flask (habit, study, emotion)
 const CATEGORY_MAP = {
     1: 'habit',
     2: 'habit',
@@ -26,8 +25,7 @@ const BACKEND_URL = "http://localhost:8000";
 let currentCategoryId = 0;
 let currentCategoryName = "";
 let currentCategoryKey = "";
-
-// --- Utility Functions ---
+let chatHistory = [];
 
 function displayMessage(text, isUser) {
     const div = document.createElement('div');
@@ -37,19 +35,20 @@ function displayMessage(text, isUser) {
         ? 'bg-blue-500 text-white p-4 rounded-3xl rounded-br-none max-w-xs shadow-md'
         : 'bg-indigo-100 text-indigo-800 p-4 rounded-3xl rounded-bl-none max-w-xs shadow-sm';
 
-    messageBox.innerHTML = `<p class="font-medium">${text}</p>`;
+    const formattedText = text.replace(/\n/g, '<br>');
+
+    messageBox.innerHTML = `<p class="font-medium">${formattedText}</p>`;
     if (!isUser) {
         messageBox.innerHTML += `<p class="text-xs mt-2 text-indigo-600">MOTIVAI</p>`;
     }
 
     div.appendChild(messageBox);
     chatMessagesContainer.appendChild(div);
-    chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Scroll to bottom
+    chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
 }
 
 function showLoading(show) {
     if (show) {
-        // Find or create a loading indicator
         let loader = document.getElementById('loader-motivai');
         if (!loader) {
             loader = document.createElement('div');
@@ -69,7 +68,6 @@ function showLoading(show) {
             loader.remove();
         }
     }
-    // Disable input while loading
     chatInput.disabled = show;
     sendButton.disabled = show;
 }
@@ -82,7 +80,7 @@ async function sendMessage(userMessage) {
     displayMessage(userMessage, true);
     showLoading(true);
 
-    chatInput.value = ''; // Clear input field
+    chatInput.value = '';
 
     try {
         const response = await fetch(`${BACKEND_URL}/api/chat`, {
@@ -92,8 +90,8 @@ async function sendMessage(userMessage) {
             },
             body: JSON.stringify({
                 message: userMessage,
-                // Use the string key expected by the backend
-                category: currentCategoryKey
+                category: currentCategoryKey,
+                history: chatHistory // Send previous history
             })
         });
 
@@ -101,10 +99,10 @@ async function sendMessage(userMessage) {
             const errorData = await response.json();
             throw new Error(`API Error ${response.status}: ${errorData.error || 'Unknown error'}`);
         }
-
         const data = await response.json();
+        chatHistory.push({ role: "user", parts: [userMessage] });
+        chatHistory.push({ role: "model", parts: [data.reply] });
 
-        // Handle successful reply
         displayMessage(data.reply, false);
 
     } catch (error) {
@@ -134,9 +132,10 @@ const goalData = {
 function selectCategory(categoryId, categoryName) {
     currentCategoryId = categoryId;
     currentCategoryName = categoryName;
-    currentCategoryKey = CATEGORY_MAP[categoryId]; // Set the key for API call
+    currentCategoryKey = CATEGORY_MAP[categoryId];
+    chatHistory = [];
 
-    // Clear and populate goals
+
     selectedCategoryTitle.textContent = `${categoryId}. ${categoryName}`;
     suggestedGoalsContainer.innerHTML = '';
     const goals = goalData[categoryId] || [];
@@ -153,14 +152,12 @@ function selectCategory(categoryId, categoryName) {
         suggestedGoalsContainer.appendChild(button);
     });
 
-    // Transition to Goal Setting Screen
     categorySelection.classList.add('hidden');
     goalSetting.classList.remove('hidden');
     premiumBanner.classList.add('hidden');
 }
 
 function showChatInterface() {
-    // Check if the user has entered a goal from the textarea
     const goalMessage = customGoalTextarea.value.trim();
 
     if (goalMessage === "") {
@@ -168,27 +165,21 @@ function showChatInterface() {
         return;
     }
 
-    // Clear initial messages and display the user's first message
     chatMessagesContainer.innerHTML = '';
     displayMessage(`Chào bạn! Tớ là MOTIVAI. Vấn đề mà bạn đang muốn giải quyết là gì? Tớ ở đây để lắng nghe và đồng hành cùng bạn. (Chủ đề: ${currentCategoryName})`, false);
 
-    // Call API with the initial goal message
     sendMessage(goalMessage);
 
-    // UI transition
     goalSetting.classList.add('hidden');
     chatInterface.classList.remove('hidden');
     premiumBanner.classList.add('hidden');
 }
 
-// Attach event listeners after the DOM is loaded
 window.onload = () => {
-    // Existing initial view state logic
     categorySelection.classList.remove('hidden');
     goalSetting.classList.add('hidden');
     chatInterface.classList.add('hidden');
 
-    // Attach listener to the send button inside the chat interface
     sendButton.addEventListener('click', () => {
         const message = chatInput.value;
         if (message) {
@@ -196,7 +187,6 @@ window.onload = () => {
         }
     });
 
-    // Allow sending message by pressing Enter
     chatInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             const message = chatInput.value;
@@ -206,7 +196,6 @@ window.onload = () => {
         }
     });
 
-    // Open Menu
     function openMenu() {
         if (menuOverlay) menuOverlay.classList.remove('hidden');
         if (slideMenu) {
@@ -218,7 +207,6 @@ window.onload = () => {
         }
     }
 
-    // Close Menu
     function closeMenu() {
         if (menuOverlay) menuOverlay.classList.add('hidden');
         if (slideMenu) {
@@ -240,7 +228,6 @@ window.onload = () => {
         menuOverlay.addEventListener('click', closeMenu);
     }
 
-    // Make functions globally accessible
     window.returnToHome = returnToHome;
     window.selectCategory = selectCategory;
     window.showChatInterface = showChatInterface;
